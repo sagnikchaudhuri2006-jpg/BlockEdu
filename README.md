@@ -1,88 +1,59 @@
-# 🎓 On-Chain Transcript Management and Verification
+# BlockEdu 🧾✨  
+*A Simple On-Chain Transcript Management & Verification System*
 
-A simple **Solidity smart contract** that enables universities or institutions to **store, manage, and verify student transcripts** securely on the blockchain.  
-This project demonstrates how blockchain technology can ensure **authenticity, transparency, and immutability** of academic records.
-
----
 <img width="1920" height="1080" alt="Screenshot 2025-10-29 140113" src="https://github.com/user-attachments/assets/b3039bfd-ea53-4278-9ee8-21b1aaf5c1fa" />
 
-## 🚀 Overview
+## 📌 Project Description
 
-Traditional transcript management systems are centralized and prone to tampering or forgery.  
-This project offers a decentralized approach — using **Ethereum smart contracts** — to make transcripts verifiable by anyone, anytime, from anywhere.
-
-### ✨ Core Features
-- 🏫 **Admin (University)** can add and verify student transcripts.
-- 👨‍🎓 **Students** can have multiple transcripts stored on-chain.
-- 🔍 **Anyone** can view and verify transcript authenticity.
-- 💾 **Transcript files** are stored off-chain (e.g., IPFS), while only **hashes or CIDs** are stored on-chain to save gas.
+BlockEdu is a blockchain-based transcript management system that allows educational institutions to **securely store and verify academic records on-chain**.  
+By using blockchain, transcripts become **tamper-proof, publicly verifiable**, and accessible anytime — eliminating the risk of fake certificates or manual verification delays.
 
 ---
 
-## 🧱 Smart Contract Details
+## 🎯 What BlockEdu Does
 
-### 📁 Contract: `TranscriptManager.sol`
+- Allows an institution (contract owner) to **store a student's transcript on-chain**
+- Anyone (employers, universities, etc.) can **verify the transcript** publicly
+- Ensures **authenticity & transparency** using blockchain immutability
+- Designed to be **simple and beginner-friendly**, yet expandable
 
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+---
 
-contract TranscriptManager {
-    address public admin;
+## 🌟 Features
 
-    struct Transcript {
-        string studentName;
-        string studentID;
-        string courseName;
-        string transcriptHash; // IPFS CID or SHA256 hash of transcript file
-        uint256 timestamp;
-        bool verified;
-    }
+| Feature | Description |
+|--------|-------------|
+| ✅ On-Chain Storage | Transcript is permanently stored on the blockchain. |
+| 🔐 Owner-Only Updates | Only the institution (contract deployer) can upload transcripts. |
+| 🌍 Public Verification | Anyone can verify transcript details instantly. |
+| 📈 Upgrade Ready | Can be extended for multiple students or additional metadata. |
 
-    mapping(string => Transcript[]) private transcripts;
+---
 
-    event TranscriptAdded(string studentID, string courseName, string transcriptHash);
-    event TranscriptVerified(string studentID, string courseName);
+## 🔗 Deployed Smart Contract
 
-    modifier onlyAdmin() {
-        require(msg.sender == admin, "Only admin can perform this action");
-        _;
-    }
+You can view and interact with the deployed contract here:
 
-    constructor() {
-        admin = msg.sender;
-    }
+**BlockScout Explorer:**  
+https://celo-sepolia.blockscout.com/address/0xA20047183354688bf477fdBD59109CF68E108611
 
-    function addTranscript(
-        string memory _studentName,
-        string memory _studentID,
-        string memory _courseName,
-        string memory _transcriptHash
-    ) public onlyAdmin {
-        Transcript memory newTranscript = Transcript({
-            studentName: _studentName,
-            studentID: _studentID,
-            courseName: _courseName,
-            transcriptHash: _transcriptHash,
-            timestamp: block.timestamp,
-            verified: false
-        });
+---
 
-        transcripts[_studentID].push(newTranscript);
-        emit TranscriptAdded(_studentID, _courseName, _transcriptHash);
-    }
+## 🧱 Smart Contract Overview
 
-    function verifyTranscript(string memory _studentID, uint256 index) public onlyAdmin {
-        require(index < transcripts[_studentID].length, "Invalid transcript index");
-        transcripts[_studentID][index].verified = true;
-        emit TranscriptVerified(_studentID, transcripts[_studentID][index].courseName);
-    }
+The BlockEdu contract:
 
-    function getTranscripts(string memory _studentID)
-        public
-        view
-        returns (Transcript[] memory)
-    {
-        return transcripts[_studentID];
-    }
-}
+- Stores transcript details such as **Sagnik Chaudhuri**, **IT**, and **1st year**
+- Restricts modifications to the **institution’s wallet**
+- Returns transcript info for **public verification**
+
+No complicated setup — simple, transparent, and trustless.
+
+---
+
+## 🚀 Getting Started (For Developers)
+
+### 1. Clone the Repository
+```bash
+git clone <your-repository-url>
+cd BlockEdu
